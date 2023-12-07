@@ -55,6 +55,7 @@ def generate(image1, video, textbox_in, first_run, state, state_, images_tensor)
     # images_tensor = [[], []]
     image_processor = handler.image_processor
     if os.path.exists(image1) and not os.path.exists(video):
+        #print("Using Image in generate")
         tensor = image_processor.preprocess(image1, return_tensors='pt')['pixel_values'][0]
         # print(tensor.shape)
         tensor = tensor.to(handler.model.device, dtype=dtype)
@@ -62,12 +63,14 @@ def generate(image1, video, textbox_in, first_run, state, state_, images_tensor)
         images_tensor[1] = images_tensor[1] + ['image']
     video_processor = handler.video_processor
     if not os.path.exists(image1) and os.path.exists(video):
+        #print("Using Video in generate " + str(dtype))
         tensor = video_processor(video, return_tensors='pt')['pixel_values'][0]
         # print(tensor.shape)
         tensor = tensor.to(handler.model.device, dtype=dtype)
         images_tensor[0] = images_tensor[0] + [tensor]
         images_tensor[1] = images_tensor[1] + ['video']
     if os.path.exists(image1) and os.path.exists(video):
+        #print("Using Image and Video")
         tensor = video_processor(video, return_tensors='pt')['pixel_values'][0]
         # print(tensor.shape)
         tensor = tensor.to(handler.model.device, dtype=dtype)
@@ -130,12 +133,20 @@ def clear_history(state, state_):
 
 conv_mode = "llava_v1"
 model_path = 'LanguageBind/Video-LLaVA-7B'
-device = 'cuda'
-load_8bit = False
-load_4bit = True
-dtype = torch.float16
+# use: xpu or cpu or cuda
+device = 'xpu'
+load_8bit = True
+load_4bit = False 
+
+if device == "cpu":
+ dtype = torch.float32
+else:
+ dtype = torch.float16
+
+#print("Loading handler")
 handler = Chat(model_path, conv_mode=conv_mode, load_8bit=load_8bit, load_4bit=load_8bit, device=device)
-# handler.model.to(dtype=dtype)
+print("Start FastAPI")
+#handler.model.to(dtype=dtype)
 if not os.path.exists("temp"):
     os.makedirs("temp")
 

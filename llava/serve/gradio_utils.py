@@ -53,6 +53,7 @@ class Chat:
     def __init__(self, model_path, conv_mode, model_base=None, load_8bit=False, load_4bit=False, device='cuda'):
         disable_torch_init()
         model_name = get_model_name_from_path(model_path)
+        print("Chat started load_pretrained_model for  " + str(device) + " " + str(model_name))
         self.tokenizer, self.model, processor, context_len = load_pretrained_model(model_path, model_base, model_name,
                                                                          load_8bit, load_4bit,
                                                                          device=device)
@@ -60,7 +61,9 @@ class Chat:
         self.video_processor = processor['video']
         self.conv_mode = conv_mode
         self.device = self.model.device
-        print(self.model)
+        #print(self.model)
+        if self.model.device == "cpu":
+            self.model = self.model.to(torch.float32)
 
     def get_prompt(self, qs, state):
         state.append_message(state.roles[0], qs)
@@ -70,7 +73,6 @@ class Chat:
     @torch.inference_mode()
     def generate(self, images_tensor: list, prompt: str, first_run: bool, state):
         tokenizer, model, image_processor = self.tokenizer, self.model, self.image_processor
-
         state = self.get_prompt(prompt, state)
         prompt = state.get_prompt()
         print('\n\n\n')
