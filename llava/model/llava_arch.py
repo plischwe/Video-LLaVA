@@ -132,6 +132,7 @@ class LlavaMetaForCausalLM(ABC):
     def encode_videos(self, videos):
         video_features = self.get_model().get_video_tower()(videos)
         video_features = self.get_model().mm_projector(video_features)
+        #print("###video features here: ", video_features, " #######")
         return video_features
     #
     # def prepare_inputs_labels_for_multimodal(
@@ -322,8 +323,9 @@ class LlavaMetaForCausalLM(ABC):
         #     image_features = torch.split(image_features, split_sizes, dim=0)
         #     image_features = [x.flatten(0, 1) for x in image_features]
         # else:
-        print(keys)
-        X_features = [getattr(self, f'encode_{key}s')(X.unsqueeze(0)) for X, key in zip(Xs, keys)]  # expand to get batchsize
+        #print("keys: ", keys)
+        #print("Xs: ", Xs[0][0][0][0][0].dtype)
+        X_features = [getattr(self, f'encode_{key}s') (X.unsqueeze(0).type(torch.float32)) for X, key in zip(Xs, keys)]  # expand to get batchsize
         # X_features = []
         # # print(2.5, *[i.shape for i in Xs], keys)  
         # for X, key in zip(Xs, keys):

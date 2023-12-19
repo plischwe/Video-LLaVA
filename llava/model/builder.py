@@ -153,7 +153,7 @@ def load_pretrained_model(model_path, model_base, model_name, load_8bit=False, l
                 # model1.load_state_dict(b, strict=False)
                 # model1.load_state_dict(c, strict=False)
 
-                model = LlavaLlamaForCausalLM.from_pretrained(model_path, torchscript=True, low_cpu_mem_usage=use_low_cpu_mem, **kwargs)
+                model = LlavaLlamaForCausalLM.from_pretrained(model_path, torchscript=True, low_cpu_mem_usage=True, **kwargs)
                 #print("Model LlavaLlam loaded...Start Ipex Optimiz")
                 #model = ipex.optimize(model.eval(), torch.float)
                 print("Loaded LlavaLlamForCasual: " + str(model_path) + " " + str(model.dtype))

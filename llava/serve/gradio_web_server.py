@@ -134,7 +134,7 @@ def clear_history(state, state_):
 conv_mode = "llava_v1"
 model_path = 'LanguageBind/Video-LLaVA-7B'
 # use: xpu or cpu or cuda
-device = 'xpu'
+device = 'cpu'
 load_8bit = True
 load_4bit = False 
 
@@ -187,7 +187,8 @@ with gr.Blocks(title='Video-LLaVA🚀', theme=gr.themes.Default(), css=block_css
             )
 
         with gr.Column(scale=7):
-            chatbot = gr.Chatbot(label="Video-LLaVA", bubble_full_width=True).style(height=750)
+            chatbot = gr.Chatbot(label="Video-LLaVA", bubble_full_width=True)
+
             with gr.Row():
                 with gr.Column(scale=8):
                     textbox.render()
@@ -258,7 +259,7 @@ with gr.Blocks(title='Video-LLaVA🚀', theme=gr.themes.Default(), css=block_css
                     [image1, video, textbox, first_run, state, state_, chatbot, images_tensor])
 
 # app = gr.mount_gradio_app(app, demo, path="/")
-demo.launch()
+demo.launch(share=True)
 
 
 # uvicorn llava.serve.gradio_web_server:app

@@ -71,7 +71,17 @@ class LlavaLlamaForCausalLM(LlamaForCausalLM, LlavaMetaForCausalLM):
         )
         return_dict = return_dict if return_dict is not None else self.config.use_return_dict
         # print(222222222222222222222222222222222222222222222)
+        #print("##### Check Here for input_ids: ", input_ids)
+        #print(input_ids[0][0].dtype)
+        #print(attention_mask[0][0].dtype)
+        #print(inputs_embeds)
+        #print(labels)
         input_ids, attention_mask, past_key_values, inputs_embeds, labels = self.prepare_inputs_labels_for_multimodal(input_ids, attention_mask, past_key_values, labels, images)
+        #print("######## dtypes ")
+        #print("input_ids types: ", input_ids.dytpe)
+        #print("attention_mask type: ", attention_mask.dtype)
+        #print("inputs_embeds types: ", inputs_embeds.dtype)
+        #print("labels types: ", labels.dtype)
         # input_ids已经没了，因为text已经融合到inputs_embeds里面：前text+img+后text，总共大几百个token
         # 之后的input_ids是上一轮预测得token，图片和之前得文本信息融到past_key_values
         # decoder outputs consists of (dec_features, layer_state, dec_hidden, dec_attn)

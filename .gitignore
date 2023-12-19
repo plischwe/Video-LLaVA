@@ -1,0 +1,5 @@
+*.swp
+__pycache__
+temp
+cache_dir
+.locks
