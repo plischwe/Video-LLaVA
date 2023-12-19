@@ -7,8 +7,8 @@ from llava.mm_utils import tokenizer_X_token, get_model_name_from_path, Keywords
 
 def main():
     disable_torch_init()
-    video = '/home/intel/plischwe/clip3.mov'
-    inp = 'How many bottles are removed from fridge?'
+    video = 'PATH_TO_VIDEO'
+    inp = 'QUERY'
     model_path = 'LanguageBind/Video-LLaVA-7B'
     device = 'cpu'
     load_4bit, load_8bit = False, True
